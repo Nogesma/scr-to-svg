@@ -1,6 +1,6 @@
 [package]
-name = "tnoodle-lib-wasm"
-version = "0.1.0"
+name = "scr-to-svg"
+version = "0.1.2"
 authors = ["Mano Ségransan <mano.segransan@protonmail.com>"]
 edition = "2021"
 license = "GPLv3"

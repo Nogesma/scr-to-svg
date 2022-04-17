@@ -28,7 +28,7 @@ extern "C" {
 }
 
 #[wasm_bindgen]
-pub fn get333scramble(scramble: &str) -> String {
+pub fn get_scramble_svg(event: &str, scramble: &str) -> String {
     set_panic_hook();
     let mut cp: CubePuzzle = CubePuzzle {
         size: 0,
@@ -37,23 +37,11 @@ pub fn get333scramble(scramble: &str) -> String {
         image: vec![],
     };
 
-    cp.set_cube(3);
-    return cp
-        .draw_scramble(scramble, CubePuzzle::default_color_scheme())
-        .to_string();
-}
-
-#[wasm_bindgen]
-pub fn get222scramble(scramble: &str) -> String {
-    set_panic_hook();
-    let mut cp: CubePuzzle = CubePuzzle {
-        size: 0,
-        cubie_size: 0,
-        gap: 0,
-        image: vec![],
-    };
-
-    cp.set_cube(2);
+    if event == "333" || event == "OH" {
+        cp.set_cube(3);
+    } else if event == "222" {
+        cp.set_cube(2);
+    }
     return cp
         .draw_scramble(scramble, CubePuzzle::default_color_scheme())
         .to_string();

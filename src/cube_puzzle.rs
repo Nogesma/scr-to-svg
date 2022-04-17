@@ -61,7 +61,7 @@ impl CubePuzzle {
                 ("B", Color::new_color("BLUE")),
                 ("D", Color::new_color("YELLOW")),
                 ("F", Color::new_color("GREEN")),
-                ("L", Color(255, 128, 0)),
+                ("L", Color::new_color("ORANGE")),
                 ("R", Color::new_color("RED")),
                 ("U", Color::new_color("WHITE")),
             ]);

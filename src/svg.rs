@@ -22,8 +22,8 @@ impl Svg {
     }
 
     pub fn set_size(&mut self, size: Dimension) {
-        self.set_attribute("width".to_string(), size.width.to_string() + "px");
-        self.set_attribute("height".to_string(), size.height.to_string() + "px");
+        self.set_attribute("width".to_string(), "100%".to_string());
+        self.set_attribute("height".to_string(), "100%".to_string());
         self.set_attribute(
             "viewBox".to_string(),
             "0 0 ".to_string()

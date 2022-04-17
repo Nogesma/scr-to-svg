@@ -15,6 +15,7 @@ impl Color {
                 ("BLACK", Color(0, 0, 0)),
                 ("GRAY", Color(128, 128, 128)),
                 ("YELLOW", Color(255, 255, 0)),
+                ("ORANGE", Color(255, 128, 0)),
             ]);
         }
 
