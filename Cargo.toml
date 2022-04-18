@@ -1,6 +1,6 @@
 [package]
 name = "scr-to-svg"
-version = "0.1.2"
+version = "0.2.0"
 authors = ["Mano Ségransan <mano.segransan@protonmail.com>"]
 edition = "2021"
 license = "GPLv3"
@@ -34,3 +34,5 @@ wasm-bindgen-test = "0.3.13"
 [profile.release]
 # Tell `rustc` to optimize for small code size.
 opt-level = "s"
+lto = true
+strip = true

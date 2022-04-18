@@ -21,34 +21,35 @@ impl CubePuzzle {
 
         for face in 0..6 {
             for j in 0..self.size {
-                // log(&("j: ".to_owned() + &j.to_string()));
                 for k in 0..self.size {
-                    // log(&("k: ".to_owned() + &k.to_string()));
                     self.image[face][j][k] = face;
                 }
             }
         }
     }
-    pub fn set_cube(&mut self, t: i32) {
+    pub fn set_cube(&mut self, t: &str) {
         match t {
-            3 => {
+            "333" | "OH" | "3BLD" => {
                 self.size = 3;
-                self.cubie_size = 10;
-                self.gap = 2;
-                self.init_image();
             }
-            2 => {
+            "222" => {
                 self.size = 2;
-                self.cubie_size = 10;
-                self.gap = 2;
-                self.init_image();
+            }
+            "444" => {
+                self.size = 4;
+            }
+            "555" => {
+                self.size = 5;
             }
             _ => {}
         }
+        self.cubie_size = 10;
+        self.gap = 2;
+        self.init_image();
     }
 
     pub fn reset(&mut self) {
-        self.set_cube(self.size as i32);
+        self.init_image();
     }
 
     fn get_face_index(s: &str) -> usize {
@@ -223,8 +224,8 @@ impl CubePuzzle {
         }
     }
 
-    fn rotate_ud_layer(r: [usize; 4], size: usize, side: usize, matrix: &mut Vec<Vec<Vec<usize>>>) {
-        let mut tmp3 = matrix[r[0]][side].to_vec();
+    fn rotate_ud_layer(r: [usize; 4], side: usize, matrix: &mut Vec<Vec<Vec<usize>>>) {
+        let tmp3 = matrix[r[0]][side].to_vec();
         for i in 0..3 {
             matrix[r[i]][side] = matrix[r[i + 1]][side].to_vec();
         }
@@ -237,7 +238,7 @@ impl CubePuzzle {
         layer: usize,
         matrix: &mut Vec<Vec<Vec<usize>>>,
     ) {
-        let mut tmp3 = matrix[r[0]][size - layer - 1].to_vec();
+        let tmp3 = matrix[r[0]][size - layer - 1].to_vec();
 
         let mut j = size - 1;
         for i in 0..size {
@@ -266,7 +267,7 @@ impl CubePuzzle {
         layer: usize,
         matrix: &mut Vec<Vec<Vec<usize>>>,
     ) {
-        let mut tmp3 = matrix[r[0]][size - layer - 1].to_vec();
+        let tmp3 = matrix[r[0]][size - layer - 1].to_vec();
 
         for i in 0..size {
             matrix[r[0]][size - layer - 1][i] = matrix[r[1]][i][layer];
@@ -291,80 +292,140 @@ impl CubePuzzle {
 
     fn apply_move(image: &mut Vec<Vec<Vec<usize>>>, size: usize, mv: &str) {
         match mv {
-            "R" => {
+            "R" | "Rw" => {
                 image[0] = CubePuzzle::rotate_2d_matrix(size, true, &image[0]);
                 CubePuzzle::rotate_rl_layer([1, 2, 4, 5], size, [size - 1, 0], image);
+                if mv == "Rw" {
+                    CubePuzzle::rotate_rl_layer([1, 2, 4, 5], size, [size - 2, 1], image);
+                }
             }
             "R2" => {
                 CubePuzzle::apply_move(image, size, "R");
                 CubePuzzle::apply_move(image, size, "R");
             }
-            "R'" => {
+            "Rw2" => {
+                CubePuzzle::apply_move(image, size, "Rw");
+                CubePuzzle::apply_move(image, size, "Rw");
+            }
+            "R'" | "Rw'" => {
                 image[0] = CubePuzzle::rotate_2d_matrix(size, false, &image[0]);
                 CubePuzzle::rotate_rl_layer([4, 2, 1, 5], size, [size - 1, 0], image);
+                if mv == "Rw'" {
+                    CubePuzzle::rotate_rl_layer([4, 2, 1, 5], size, [size - 2, 1], image);
+                }
             }
-            "L" => {
+            "L" | "Lw" => {
                 image[3] = CubePuzzle::rotate_2d_matrix(size, true, &image[3]);
                 CubePuzzle::rotate_rl_layer([4, 2, 1, 5], size, [0, size - 1], image);
+                if mv == "Lw" {
+                    CubePuzzle::rotate_rl_layer([4, 2, 1, 5], size, [1, size - 2], image);
+                }
             }
             "L2" => {
                 CubePuzzle::apply_move(image, size, "L");
                 CubePuzzle::apply_move(image, size, "L");
             }
-            "L'" => {
-                image[3] = CubePuzzle::rotate_2d_matrix(size, true, &image[3]);
-                CubePuzzle::rotate_rl_layer([1, 2, 4, 5], size, [0, size - 1], image);
+            "Lw2" => {
+                CubePuzzle::apply_move(image, size, "Lw");
+                CubePuzzle::apply_move(image, size, "Lw");
             }
-            "U" => {
+            "L'" | "Lw'" => {
+                image[3] = CubePuzzle::rotate_2d_matrix(size, false, &image[3]);
+                CubePuzzle::rotate_rl_layer([1, 2, 4, 5], size, [0, size - 1], image);
+                if mv == "Lw'" {
+                    CubePuzzle::rotate_rl_layer([1, 2, 4, 5], size, [1, size - 2], image);
+                }
+            }
+            "U" | "Uw" => {
                 image[1] = CubePuzzle::rotate_2d_matrix(size, true, &image[1]);
-                CubePuzzle::rotate_ud_layer([0, 5, 3, 2], size, 0, image);
+                CubePuzzle::rotate_ud_layer([0, 5, 3, 2], 0, image);
+                if mv == "Uw" {
+                    CubePuzzle::rotate_ud_layer([0, 5, 3, 2], 1, image);
+                }
             }
             "U2" => {
                 CubePuzzle::apply_move(image, size, "U");
                 CubePuzzle::apply_move(image, size, "U");
             }
-            "U'" => {
-                image[1] = CubePuzzle::rotate_2d_matrix(size, false, &image[1]);
-                CubePuzzle::rotate_ud_layer([0, 2, 3, 5], size, 0, image);
+            "Uw2" => {
+                CubePuzzle::apply_move(image, size, "Uw");
+                CubePuzzle::apply_move(image, size, "Uw");
             }
-            "D" => {
+            "U'" | "Uw'" => {
+                image[1] = CubePuzzle::rotate_2d_matrix(size, false, &image[1]);
+                CubePuzzle::rotate_ud_layer([0, 2, 3, 5], 0, image);
+                if mv == "Uw'" {
+                    CubePuzzle::rotate_ud_layer([0, 2, 3, 5], 1, image);
+                }
+            }
+            "D" | "Dw" => {
                 image[4] = CubePuzzle::rotate_2d_matrix(size, true, &image[4]);
-                CubePuzzle::rotate_ud_layer([0, 2, 3, 5], size, size - 1, image);
+                CubePuzzle::rotate_ud_layer([0, 2, 3, 5], size - 1, image);
+                if mv == "Dw" {
+                    CubePuzzle::rotate_ud_layer([0, 2, 3, 5], size - 2, image);
+                }
             }
             "D2" => {
                 CubePuzzle::apply_move(image, size, "D");
                 CubePuzzle::apply_move(image, size, "D");
             }
-            "D'" => {
-                image[4] = CubePuzzle::rotate_2d_matrix(size, false, &image[4]);
-                CubePuzzle::rotate_ud_layer([0, 5, 3, 2], size, size - 1, image);
+            "Dw2" => {
+                CubePuzzle::apply_move(image, size, "Dw");
+                CubePuzzle::apply_move(image, size, "Dw");
             }
-            "F" => {
+            "D'" | "Dw'" => {
+                image[4] = CubePuzzle::rotate_2d_matrix(size, false, &image[4]);
+                CubePuzzle::rotate_ud_layer([0, 5, 3, 2], size - 1, image);
+                if mv == "Dw'" {
+                    CubePuzzle::rotate_ud_layer([0, 5, 3, 2], size - 2, image);
+                }
+            }
+            "F" | "Fw" => {
                 image[2] = CubePuzzle::rotate_2d_matrix(size, true, &image[2]);
                 CubePuzzle::rotate_fb_layer([1, 3, 4, 0], size, 0, image);
+                if mv == "Fw" {
+                    CubePuzzle::rotate_fb_layer([1, 3, 4, 0], size, 1, image);
+                }
             }
             "F2" => {
                 CubePuzzle::apply_move(image, size, "F");
                 CubePuzzle::apply_move(image, size, "F");
             }
-            "F'" => {
+            "Fw2" => {
+                CubePuzzle::apply_move(image, size, "Fw");
+                CubePuzzle::apply_move(image, size, "Fw");
+            }
+            "F'" | "Fw'" => {
                 image[2] = CubePuzzle::rotate_2d_matrix(size, false, &image[2]);
                 CubePuzzle::rev_rotate_fb_layer([1, 0, 4, 3], size, 0, image);
+                if mv == "Fw'" {
+                    CubePuzzle::rev_rotate_fb_layer([1, 0, 4, 3], size, 1, image);
+                }
             }
-            "B" => {
+            "B" | "Bw" => {
                 image[5] = CubePuzzle::rotate_2d_matrix(size, true, &image[5]);
                 CubePuzzle::rev_rotate_fb_layer([4, 3, 1, 0], size, 0, image);
+                if mv == "Bw" {
+                    CubePuzzle::rev_rotate_fb_layer([4, 3, 1, 0], size, 1, image);
+                }
             }
             "B2" => {
                 CubePuzzle::apply_move(image, size, "B");
                 CubePuzzle::apply_move(image, size, "B");
             }
-            "B'" => {
+            "Bw2" => {
+                CubePuzzle::apply_move(image, size, "Bw");
+                CubePuzzle::apply_move(image, size, "Bw");
+            }
+            "B'" | "Bw'" => {
                 image[5] = CubePuzzle::rotate_2d_matrix(size, false, &image[5]);
                 CubePuzzle::rotate_fb_layer([4, 0, 1, 3], size, 0, image);
+                if mv == "Bw'" {
+                    CubePuzzle::rotate_fb_layer([4, 0, 1, 3], size, 1, image);
+                }
             }
             _ => {
-                log(&("Error, movement not regocnised: ".to_string() + &*mv));
+                log(&("Error, movement not recognised: ".to_string() + &*mv));
             }
         }
     }
@@ -373,7 +434,7 @@ impl CubePuzzle {
         if scramble.trim().is_empty() {
             return;
         }
-        let mut moves = scramble.split_ascii_whitespace();
+        let moves = scramble.split_ascii_whitespace();
         let ap = move |i| CubePuzzle::apply_move(&mut self.image, self.size, i);
 
         moves.for_each(ap);

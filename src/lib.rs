@@ -37,11 +37,13 @@ pub fn get_scramble_svg(event: &str, scramble: &str) -> String {
         image: vec![],
     };
 
-    if event == "333" || event == "OH" {
-        cp.set_cube(3);
-    } else if event == "222" {
-        cp.set_cube(2);
+    cp.set_cube(event);
+
+    if cp.size == 0 {
+        log(&("Error: event not recognised.").to_string());
+        return "".to_string();
     }
+
     return cp
         .draw_scramble(scramble, CubePuzzle::default_color_scheme())
         .to_string();
