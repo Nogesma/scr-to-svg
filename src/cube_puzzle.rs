@@ -211,15 +211,15 @@ impl CubePuzzle {
             }
         }
 
-        let mut j = size - 1;
+        let mut j = size;
         for i in 0..size {
-            matrix[r[2]][i][side[0]] = matrix[r[3]][j][side[1]];
+            matrix[r[2]][i][side[0]] = matrix[r[3]][j - 1][side[1]];
             j -= 1;
         }
 
-        j = size - 1;
+        j = size;
         for i in 0..size {
-            matrix[r[3]][i][side[1]] = tmp3[j];
+            matrix[r[3]][i][side[1]] = tmp3[j - 1];
             j -= 1;
         }
     }
@@ -240,9 +240,9 @@ impl CubePuzzle {
     ) {
         let tmp3 = matrix[r[0]][size - layer - 1].to_vec();
 
-        let mut j = size - 1;
+        let mut j = size;
         for i in 0..size {
-            matrix[r[0]][size - layer - 1][i] = matrix[r[1]][j][size - layer - 1];
+            matrix[r[0]][size - layer - 1][i] = matrix[r[1]][j - 1][size - layer - 1];
             j -= 1;
         }
 
@@ -250,9 +250,9 @@ impl CubePuzzle {
             matrix[r[1]][i][size - layer - 1] = matrix[r[2]][layer][i];
         }
 
-        j = size - 1;
+        j = size;
         for i in 0..size {
-            matrix[r[2]][layer][i] = matrix[r[3]][j][layer];
+            matrix[r[2]][layer][i] = matrix[r[3]][j - 1][layer];
             j -= 1;
         }
 
@@ -273,9 +273,9 @@ impl CubePuzzle {
             matrix[r[0]][size - layer - 1][i] = matrix[r[1]][i][layer];
         }
 
-        let mut j = size - 1;
+        let mut j = size;
         for i in 0..size {
-            matrix[r[1]][i][layer] = matrix[r[2]][layer][j];
+            matrix[r[1]][i][layer] = matrix[r[2]][layer][j - 1];
             j -= 1;
         }
 
@@ -283,9 +283,9 @@ impl CubePuzzle {
             matrix[r[2]][layer][j] = matrix[r[3]][j][size - layer - 1];
         }
 
-        j = size - 1;
+        j = size;
         for i in 0..size {
-            matrix[r[3]][i][size - layer - 1] = tmp3[j];
+            matrix[r[3]][i][size - layer - 1] = tmp3[j - 1];
             j -= 1;
         }
     }
