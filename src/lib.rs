@@ -1,12 +1,14 @@
+extern crate core;
+
 mod color;
 pub mod cube_puzzle;
 mod dimension;
 mod element;
+mod rotations;
 mod svg;
 mod utils;
 
-use crate::cube_puzzle::CubePuzzle;
-use crate::utils::set_panic_hook;
+use crate::cube_puzzle::{get_cube_size, CubePuzzle};
 use wasm_bindgen::prelude::*;
 
 // When the `wee_alloc` feature is enabled, use `wee_alloc` as the global
@@ -29,22 +31,17 @@ extern "C" {
 
 #[wasm_bindgen]
 pub fn get_scramble_svg(event: &str, scramble: &str) -> String {
-    set_panic_hook();
-    let mut cp: CubePuzzle = CubePuzzle {
-        size: 0,
-        cubie_size: 0,
-        gap: 0,
-        image: vec![],
-    };
+    utils::set_panic_hook();
 
-    cp.set_cube(event);
-
-    if cp.size == 0 {
-        log(&("Error: event not recognised.").to_string());
+    let cube_size = get_cube_size(event);
+    if cube_size == 0 {
+        log("Error: event not recognised.");
         return "".to_string();
     }
 
-    return cp
-        .draw_scramble(scramble, CubePuzzle::default_color_scheme())
-        .to_string();
+    let mut cube_puzzle = CubePuzzle::new(cube_size);
+
+    cube_puzzle.apply_algorithm(scramble);
+
+    cube_puzzle.draw().to_string()
 }

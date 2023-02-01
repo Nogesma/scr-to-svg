@@ -1,5 +1,7 @@
 use crate::color::Color;
 use std::collections::HashMap;
+use std::fmt;
+use std::fmt::Formatter;
 
 pub struct Element {
     pub name: String,
@@ -30,17 +32,20 @@ impl Element {
     pub fn set_stroke(&mut self, c: Color) {
         self.set_attribute("stroke".to_string(), c.to_string());
     }
+}
 
-    pub fn to_string(&self) -> String {
+impl fmt::Display for Element {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         let mut str: String = "<".to_string() + &*self.name;
         for (key, value) in &self.attributes {
             str.push(' ');
-            str.push_str(&*key);
+            str.push_str(key);
             str.push_str("=\"");
-            str.push_str(&*value);
+            str.push_str(value);
             str.push('"');
         }
         str.push_str("/>");
-        return str;
+
+        write!(f, "{str}")
     }
 }
