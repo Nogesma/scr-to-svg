@@ -106,7 +106,10 @@ impl Puzzle for Megaminx {
     fn draw(&self) -> SVG {
         let (width, height) = self.get_preferred_size();
 
-        let mut svg = Document::new().set("viewBox", (0, 0, width, height));
+        let mut svg = Document::new()
+            .set("viewBox", (0, 0, width, height))
+            .set("height", "100%")
+            .set("width", "100%");
 
         self.draw_minx(&mut svg);
         svg
