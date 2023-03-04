@@ -8,7 +8,7 @@ use std::f64::consts::PI;
 use std::fmt;
 use svg::node::element::path::Position::Absolute;
 use svg::node::element::path::{Command, Data, Parameters};
-use svg::node::element::{Path, SVG};
+use svg::node::element::{Group, Path, SVG};
 use svg::{Document, Node};
 
 #[derive(Debug)]
@@ -228,8 +228,10 @@ impl Megaminx {
         faces
     }
 
-    fn draw_minx(&self, g: &mut SVG) {
+    fn draw_minx(&self, svg: &mut SVG) {
         let pentagons = self.get_face_boundaries();
+
+        let mut g = Group::new().set("transform", "translate(0.5,0.5)");
 
         for face in pentagons.keys() {
             let f = *face as usize;
@@ -248,7 +250,7 @@ impl Megaminx {
             };
 
             Megaminx::draw_pentagon(
-                g,
+                &mut g,
                 pentagons.get(face).unwrap(),
                 &self.state.slice(s![f, ..]),
                 rotate_counter_clockwise,
@@ -256,10 +258,11 @@ impl Megaminx {
                 &self.color_scheme,
             );
         }
+        svg.append(g);
     }
 
     fn draw_pentagon(
-        g: &mut SVG,
+        g: &mut Group,
         p: &Data,
         state: &ArrayView1<Face>,
         rotate_counter_clockwise: usize,

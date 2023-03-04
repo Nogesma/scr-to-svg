@@ -1,4 +1,6 @@
-use crate::puzzles::cube::{Cube, FiveByFive, FourByFour, ThreeByThree, TwoByTwo};
+use crate::puzzles::cube::{
+    Cube, FiveByFive, FourByFour, SevenBySeven, SixBySix, ThreeByThree, TwoByTwo,
+};
 use crate::puzzles::megaminx::Megaminx;
 use crate::utils::color::Color;
 use std::collections::HashMap;
@@ -29,6 +31,8 @@ pub fn new(event: &str) -> Option<Box<dyn Puzzle>> {
         "222" => Some(Box::new(Cube::<TwoByTwo>::new())),
         "444" => Some(Box::new(Cube::<FourByFour>::new())),
         "555" => Some(Box::new(Cube::<FiveByFive>::new())),
+        "666" => Some(Box::new(Cube::<SixBySix>::new())),
+        "777" => Some(Box::new(Cube::<SevenBySeven>::new())),
         "MEGA" => Some(Box::new(Megaminx::new())),
         _ => None,
     }
